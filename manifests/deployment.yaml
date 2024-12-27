@@ -1,0 +1,68 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hextris-app
+  labels:
+    app: hextris-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hextris-app
+  template:
+    metadata:
+      labels:
+        app: hextris-app
+    spec:
+      volumes:
+      - name: client-temp-volume
+        emptyDir: {}
+      - name: proxy-temp-volume
+        emptyDir: {}
+      - name: fastcgi-temp-volume
+        emptyDir: {}
+      - name: uwsgi-temp-volume
+        emptyDir: {}
+      - name: scgi-temp-volume
+        emptyDir: {}
+      - name: var-run-volume
+        emptyDir: {}
+      containers:
+      - name: hextris-app
+        image: hextris-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+          requests:
+            cpu: "250m"
+            memory: "128Mi"
+        volumeMounts:
+        - name: client-temp-volume
+          mountPath: /var/cache/nginx/client_temp
+        - name: proxy-temp-volume
+          mountPath: /var/cache/nginx/proxy_temp
+        - name: fastcgi-temp-volume
+          mountPath: /var/cache/nginx/fastcgi_temp
+        - name: uwsgi-temp-volume
+          mountPath: /var/cache/nginx/uwsgi_temp
+        - name: scgi-temp-volume
+          mountPath: /var/cache/nginx/scgi_temp
+        - name: var-run-volume
+          mountPath: /var/run
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - "ALL"
+            add:
+              - "CAP_CHOWN"
+              - "CAP_SETGID"
+              - "CAP_SETUID"
+              - "CAP_NET_BIND_SERVICE"
+              - "CAP_NET_RAW"
