@@ -54,7 +54,7 @@ docker run -it -d -p 8080:80 hextris-app
 
 If you open http://localhost:8080/, you should see this:
 
-![screenshot](images/screenshot1.png)
+![screenshot](images/screenshot1_1.png)
 
 ---
 
