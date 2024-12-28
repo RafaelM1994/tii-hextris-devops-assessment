@@ -31,6 +31,8 @@ pipeline {
         GIT_REPO = 'https://github.com/RafaelM1994/tii-hextris-devops-assessment.git'
         HEXTRIS_DIR = 'hextris'  // Folder inside the repo to navigate into
         DOCKER_IMAGE = 'hextris-app'
+        K8S_DEPLOYMENT = 'hextris-app'
+        K8S_NAMESPACE = 'default'
     }
 
     parameters {

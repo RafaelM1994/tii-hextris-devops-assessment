@@ -265,9 +265,36 @@ http://hextris.tii.com/
 
 **4. CI/CD Pipeline:**
 
-- Set up a CI/CD pipeline using Jenkins [https://jenkins-assignment1.arrc.tii.ae/](https://jenkins-assignment1.arrc.tii.ae/ "https://jenkins-assignment1.arrc.tii.ae/") ( **user:** candidate  **pass:** dbn1X4>IB=4| ) for agents you can use  pod templates: Kubernetes plugin ([https://www.jenkins.io/doc/pipeline/steps/kubernetes/](https://www.jenkins.io/doc/pipeline/steps/kubernetes/ "https://www.jenkins.io/doc/pipeline/steps/kubernetes/"))
+- Set up a CI/CD pipeline using Jenkins
+  For agents you can use  pod templates: Kubernetes plugin ([https://www.jenkins.io/doc/pipeline/steps/kubernetes/](https://www.jenkins.io/doc/pipeline/steps/kubernetes/ "https://www.jenkins.io/doc/pipeline/steps/kubernetes/"))
 
 
+The pipeline will do the following:
+
+
+#### Checkout Code:
+
+Uses the Docker container to clone the Git repository specified by GIT_REPO.
+Retrieves the latest code from the main branch (or another branch if specified).
+
+#### Build and Tag Docker Image:
+
+Builds the Docker image using the Dockerfile located in the HEXTRIS_DIR.
+
+#### Tags the image with two tags:
+${BUILD_TAG}: A unique tag (typically, Jenkins sets it based on the build number or timestamp).
+latest: A tag for the most recent version of the application.
+
+#### Push Docker Image:
+
+Authenticates with AWS Elastic Container Registry (ECR) using the AWS CLI.
+Pushes the Docker image to ECR with both the ${BUILD_TAG} and latest tags.
+
+#### Update and Apply Kubernetes Deployment:
+
+Uses the kubectl container to update the deployment in the Kubernetes cluster:
+Updates the container image for the specified deployment (${K8S_DEPLOYMENT}) with the newly built Docker image.
+Restarts the deployment to apply the changes.
 
 ```yaml
 pipeline {
@@ -303,6 +330,8 @@ pipeline {
         GIT_REPO = 'https://github.com/RafaelM1994/tii-hextris-devops-assessment.git'
         HEXTRIS_DIR = 'hextris'  // Folder inside the repo to navigate into
         DOCKER_IMAGE = 'hextris-app'
+        K8S_DEPLOYMENT = 'hextris-app'
+        K8S_NAMESPACE = 'default'
     }
 
     parameters {
@@ -451,3 +480,9 @@ I also tried with websocket, it also did not work:
 
 In the internal configuration where Jenkins is configured, it has the port 50000, that's why it works:
 ![screenshot](images/screenshot7.png)
+
+
+
+Proof of the agent pods being scheduled in my minikube cluster:
+
+![screenshot](images/screenshot8.png)
