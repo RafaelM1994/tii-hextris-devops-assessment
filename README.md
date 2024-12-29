@@ -4,6 +4,23 @@
 Solution to deploy a scalable web application.
 
 
+## Diagrams
+
+
+## Infrastructure Architecture
+
+![screenshot](images/screenshot9.png)
+
+
+## Working Pipeline
+
+![screenshot](images/screenshot10.png)
+
+## Suggested Pipeline Scenario
+
+![screenshot](images/screenshot11.png)
+
+
 ## Deployment
 
 **1. Application:**
