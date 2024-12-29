@@ -1,4 +1,4 @@
-FROM nginx:alpine
+FROM docker.io/library/nginx:alpine
 
 # Copy app files to the Nginx HTML directory
 COPY . /usr/share/nginx/html
